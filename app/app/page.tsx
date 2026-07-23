@@ -3,11 +3,11 @@ import {
   Bell,
   Bot,
   CalendarDays,
+  Camera,
   CheckCircle2,
   ChevronDown,
   ContactRound,
   Inbox,
-  Instagram,
   MessageSquareText,
   Paperclip,
   Search,
@@ -56,7 +56,7 @@ export default function DashboardPage() {
       <section className="dashboard-main">
         <header className="dashboard-topbar">
           <label className="search-box"><Search size={18} /><input placeholder="Pesquisar conversas, contactos ou ações" /></label>
-          <div className="channel-tabs"><button className="selected">● WhatsApp</button><button>◎ Site</button><button><Instagram size={16} /> Instagram</button></div>
+          <div className="channel-tabs"><button className="selected">● WhatsApp</button><button>◎ Site</button><button><Camera size={16} /> Instagram</button></div>
           <button className="button button-primary compact"><Zap size={17} /> Nova automação</button>
           <button className="tenant-switch"><span className="avatar">CV</span> Clínica Vida+ <ChevronDown size={16} /></button>
         </header>
