@@ -21,8 +21,10 @@ import { useRouter } from 'next/navigation';
 import {
   getConversation,
   getProfile,
+  getSelectedTenantSlug,
   listConversations,
   sendConversationMessage,
+  setSelectedTenantSlug,
   updateConversationStatus,
 } from '@/lib/api';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
@@ -91,6 +93,9 @@ export function DashboardApp() {
         const currentList = await listConversations(status, search);
         if (!active) return;
         setProfile(currentProfile);
+        if (!getSelectedTenantSlug()) {
+          setSelectedTenantSlug(currentProfile.tenant.slug);
+        }
         setList(currentList);
         const firstId = currentList.data?.payload?.[0]?.id ?? null;
         setSelectedId((current) => current ?? firstId);
@@ -201,6 +206,35 @@ export function DashboardApp() {
     }
   }
 
+  async function changeTenant(slug: string) {
+    if (!slug || slug === profile?.tenant.slug) return;
+
+    setSelectedTenantSlug(slug);
+    setLoading(true);
+    setSelectedId(null);
+    setSelected(null);
+
+    try {
+      const [currentProfile, currentList] = await Promise.all([
+        getProfile(),
+        listConversations(status, ''),
+      ]);
+      setProfile(currentProfile);
+      setSearch('');
+      setList(currentList);
+      setSelectedId(currentList.data?.payload?.[0]?.id ?? null);
+      setError('');
+    } catch (switchError) {
+      setError(
+        switchError instanceof Error
+          ? switchError.message
+          : 'Não foi possível mudar de operação.',
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function logout() {
     await getSupabaseBrowserClient().auth.signOut();
     router.replace('/login');
@@ -241,7 +275,19 @@ export function DashboardApp() {
           <label className="search-box"><Search size={18} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Pesquisar nas conversas" /></label>
           <div className="channel-tabs"><button className="selected"><Smartphone size={15} /> WhatsApp</button></div>
           <button className="button button-light compact" type="button" onClick={() => void refreshList(true)}><RefreshCw size={16} /> Atualizar</button>
-          <button className="tenant-switch" type="button"><span className="avatar">{initials(tenantName)}</span>{tenantName}<ChevronDown size={16} /></button>
+          <label className="tenant-switch">
+            <span className="avatar">{initials(tenantName)}</span>
+            <select
+              aria-label="Selecionar operação"
+              value={profile?.tenant.slug ?? ''}
+              onChange={(event) => void changeTenant(event.target.value)}
+            >
+              {(profile?.tenants ?? []).map((tenant) => (
+                <option key={tenant.id} value={tenant.slug}>{tenant.name}</option>
+              ))}
+            </select>
+            <ChevronDown size={16} />
+          </label>
         </header>
 
         {error ? <div className="dashboard-alert">{error}</div> : null}
