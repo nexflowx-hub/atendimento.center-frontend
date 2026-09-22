@@ -51,7 +51,7 @@ export default function LandingPage() {
             <a href="#planos">Planos</a>
             <a href="#contacto">Contacto</a>
           </div>
-          <a className="button button-primary nav-cta" href="/app">Pedir demonstração</a>
+          <a className="button button-primary nav-cta" href="https://app.atendimento.center">Pedir demonstração</a>
         </nav>
 
         <div id="top" className="hero-grid container">
@@ -65,7 +65,7 @@ export default function LandingPage() {
               <span><CheckCircle2 size={18} /> Automatize processos.</span>
             </div>
             <div className="hero-actions">
-              <a className="button button-primary" href="/app">Solicitar demonstração</a>
+              <a className="button button-primary" href="https://app.atendimento.center">Solicitar demonstração</a>
               <a className="button button-secondary" href="#produto"><PlayCircle size={19} /> Ver como funciona</a>
             </div>
           </div>
@@ -154,7 +154,7 @@ export default function LandingPage() {
 
       <section id="planos" className="cta-section container">
         <div><Sparkles size={30} /><h2>Transforme o seu atendimento numa central inteligente.</h2></div>
-        <a className="button button-light" href="/app">Começar agora <ArrowRight size={18} /></a>
+        <a className="button button-light" href="https://app.atendimento.center">Começar agora <ArrowRight size={18} /></a>
       </section>
 
       <footer id="contacto" className="site-footer">
