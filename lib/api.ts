@@ -7,6 +7,17 @@ import type {
 } from './types';
 
 const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? 'https://api.atendimento.center/api/v1').replace(/\/$/, '');
+const TENANT_STORAGE_KEY = 'atendimento.center.tenant';
+
+export function getSelectedTenantSlug(): string | null {
+  if (typeof window === 'undefined') return null;
+  return window.localStorage.getItem(TENANT_STORAGE_KEY);
+}
+
+export function setSelectedTenantSlug(slug: string): void {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(TENANT_STORAGE_KEY, slug);
+}
 
 async function apiRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
   const supabase = getSupabaseBrowserClient();
@@ -16,11 +27,14 @@ async function apiRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
     throw new Error('AUTH_REQUIRED');
   }
 
+  const tenantSlug = getSelectedTenantSlug();
+
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: {
       Authorization: `Bearer ${data.session.access_token}`,
       Accept: 'application/json',
+      ...(tenantSlug ? { 'X-Tenant-Slug': tenantSlug } : {}),
       ...(init.body ? { 'Content-Type': 'application/json' } : {}),
       ...init.headers,
     },
