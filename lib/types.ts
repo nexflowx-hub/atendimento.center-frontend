@@ -11,6 +11,13 @@ export interface AuthenticatedProfile {
     slug: string;
     status: string;
   };
+  tenants: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    status: string;
+    role: string;
+  }>;
 }
 
 export interface ChatwootContact {
